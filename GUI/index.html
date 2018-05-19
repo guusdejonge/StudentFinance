@@ -1,0 +1,653 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<title>Guus de Jonge</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="UTF-8">
+		<link rel="icon" href="img/favicon.png" sizes="16x16" type="image/png">
+		<link href="styles/bootstrap.min.css" rel="stylesheet">
+		<link href="styles/toastr.css" rel="stylesheet">
+		<link href="styles/standard.css" rel="stylesheet">	
+		<link href="styles/styles.css" rel="stylesheet">
+		<link href="styles/bootstrap-toggle.min.css" rel="stylesheet">
+		<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+		<script src="node_modules/web3/dist/web3.min.js"></script>
+		<script src="scripts/bootstrap.min.js"></script>
+		<script src="scripts/bootstrap-toggle.min.js"></script>
+		<script src="scripts/clipboard.min.js"></script>
+		<script src="scripts/toastr.js"></script>
+		<script src="scripts/script.js"></script>
+	</head>
+	<body>
+		<section class="ninety">
+			<div class="jumbotron" id="slider">
+				<ul>
+					<li>
+						<div class="centermessage">
+							<span class="title">Welcome</span>
+							<span class="subtitle">To the proof-of-concept of the Blockchain & Student Finance thesis by G. de Jonge.
+							In order to launch the demo, please follow the upcomming steps.<br>
+						 	</span>
+							<a  href="files/ozpunderconstruction.pdf" download><button type="button" class="btn btn-default"><i class="fas fa-save"></i> Download Thesis</button></a>
+							<button type="button" class="btn btn-success notclear" onclick="move('-100%')"><i class="fas fa-play"></i> Continue to Step 1</button>
+						</div>
+					</li>
+					<li>
+						<div class="centermessage">
+							<span class="title">Step 1: Install & Run TestRPC</span>
+							<span class="subtitle">
+								<i class="fas fa-chevron-right"></i> If not installed yet, install: <b><a class="text-success" href="https://nodejs.org/" target="_blank">Node.js</a></b><br>
+								<i class="fas fa-chevron-right"></i> Open the Windows Command Prompt (CMD).<br>
+								<i class="fas fa-chevron-right"></i> Click on <b><a class="text-success copy hand" onclick="copyCode1()">Copy This <i class="far fa-circle uncopied"></i><i class="fas fa-check-circle copied"></i></a></b>, paste these commands in CMD and press enter.<br>
+								<i class="fas fa-chevron-right"></i> Do not close this CMD window.
+							</span>
+							<button type="button" class="btn btn-success" onclick="move('-200%')"><i class="fas fa-play"></i> Continue to Step 2</button>
+						</div>
+					</li>
+					<li>
+						<div class="centermessage">
+							<span class="title">Step 2: Preparing Remix IDE</span>
+							<span class="subtitle">
+								<i class="fas fa-chevron-right"></i> Go to: <b><a class="text-success" href="http://remix.ethereum.org/" target="_blank">Remix IDE</a></b>.<br>
+								<i class="fas fa-chevron-right"></i> Click on the Run tab at the top-right corner and change the Environment to <b>Web3 Provider</b>. Select <b>http://localhost:8545</b> as the local host address.<br>
+								<i class="fas fa-chevron-right"></i> Click on the plus symbol (create new file) at the top-left corner and create a new file called <b>StudentFinance</b>.<br>
+								<i class="fas fa-chevron-right"></i> Click on <b><a class="text-success copy hand" onclick="copyCode2()">Copy Code <i class="far fa-circle uncopied"></i><i class="fas fa-check-circle copied"></i></a></b> to copy the minified Solidity code to your clipboard. Now paste this in your <b>StudentFinance</b> file. The code can also be found on <a class="text-success" href="https://github.com/guusdejonge/StudentFinance/blob/master/SmartContract/StudentFinance.sol" target="_blank"><b>GitHub</b></a>.
+							</span>
+							<button type="button" class="btn btn-success" onclick="move('-300%')"><i class="fas fa-play"></i> Continue to Step 3</button>
+						</div>
+					</li>
+					<li>
+						<div class="centermessage">
+							<span class="title">Step 3: Connecting Remix IDE</span>
+							<span class="subtitle">
+								<i class="fas fa-chevron-right"></i> Click on the Compile tab at the top-right corner and click on <b>Start to Compile</b>.<br>
+								<i class="fas fa-chevron-right"></i> Click on the Run tab at the top-right corner and click on <b>Deploy</b>. A new contract a will show up at the right.<br>
+								<i class="fas fa-chevron-right"></i> Click on the <i class="fas fa-paste"></i> <b>icon</b> of your new contract to copy the contract address. Paste the address in the textbox below.<br>
+								<input type="text" spellcheck="false" placeholder="Contract Address" class="form-control" id="contractaddress">
+							</span>
+							<button type="button" class="btn btn-success" onclick="move('-400%'); launchContract();"><i class="fas fa-play"></i> Launch Contract</button>
+						</div>
+					</li>
+					<li>
+						<div class="centermessage" id="throwerror">
+							<span class="title">Proof-Of-Concept</span>
+							<span class="subtitle" ><i class="fas fa-plug"></i> <b>Oops!</b> Something went wrong. Have you followed all of the previous steps? If so, please take the following actions:<br><br>
+								<i class="fas fa-chevron-right"></i> Shut down the <b>CMD</b> window(s).<br>
+								<i class="fas fa-chevron-right"></i> Close the <b>REMIX IDE</b> browser tab.<br>
+								<i class="fas fa-chevron-right"></i> Refresh <b>this website</b>, and try again.<br><br>
+								<i class="fas fa-heart"></i> <b>Credits</b>: The icons used in the proof-of-concept are created by <b><a class="text-white" href="https://www.flaticon.com/authors/vectors-market" title="Vectors Market">Vectors Market</a></b> and <b><a class="text-white" href="https://www.flaticon.com/authors/dinosoftlabs" title="DinosoftLabs">Dinosoft Labs</a></b> from <b><a class="text-white" href="https://www.flaticon.com/" title="Flaticon">Flaticon.com</a></b>. They are licensed by <b><a class="text-white" href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></b>.
+							</span>
+						</div>
+						<div id="proofofconcept">
+							<div class="container">
+								<div class="row poftitle">
+								</div>
+								<div class="row pofcontent">
+									<div class="col-2 users">
+										<div class="row">
+										</div>
+										<div class="row">
+											<div class="col-4">
+												<img src="img/financier.png" class="account">
+											</div>
+											<div class="col-8">
+												<a class="account"><b>Financier</b><br>
+												<i class="fas fa-euro-sign"></i> <span class="showbalance">0</span>,-</a>
+											</div>
+										</div>
+										<div class="row newstudent">
+											<div class="col-4">
+												<img src="img/student.png" class="account">
+											</div>
+											<div class="col-8">
+												<a class="account"><b>Student 1</b><br>
+												<i class="fas fa-euro-sign"></i> <span class="showbalance"></span>,-</a>
+											</div>
+										</div>
+										<div class="row newstudent">
+											<div class="col-4">
+												<img src="img/student.png" class="account">
+											</div>
+											<div class="col-8">
+												<a class="account"><b>Student 2</b><br>
+												<i class="fas fa-euro-sign"></i> <span class="showbalance"></span>,-</a>
+											</div>
+										</div>
+										<div class="row newstudent">
+											<div class="col-4">
+												<img src="img/student.png" class="account">
+											</div>
+											<div class="col-8">
+												<a class="account"><b>Student 3</b><br>
+												<i class="fas fa-euro-sign"></i> <span class="showbalance"></span>,-</a>
+											</div>
+										</div>
+										<button type="button" class="btn btn-light" id="addstudent">
+											<i class="fas fa-plus-circle"></i> Add Student
+										</button>
+									</div>
+									<div class="col-8" id="interface">
+										<div class="row">
+											<a class="username">WELCOME, <b><span id="showuser">FINANCIER</span></b></a>
+										</div>
+										<div class="row">
+											<div class="row interfacetitle userinfo">
+												<a>USER INFORMATION</a>
+											</div>
+											<div class="col-2">
+												<a><b>Address:<br>
+												Date:<br>
+												Balance:</b></a>
+											</div>
+											<div class="col-10">
+												<a><span id="showaddress"></span><br>
+												<span id="showdate"></span><br>
+												<i class="fas fa-euro-sign"></i> <span id="showbalance"></span></a>
+											</div>
+										</div>
+										<div class="row financierrows">
+											<div class="row interfacetitle">
+												LOAN MANAGEMENT
+											</div>
+											<div class="row loanrow">
+												<div class="col-6">
+													<div class="row">
+														<div class="col-3">
+															<a><b>Name</b></a>
+														</div>
+														<div class="col-3">
+															<a><b>Amount</b></a>
+														</div>
+														<div class="col-3">
+															<a><b>Duration</b></a>
+														</div>
+														<div class="col-3">
+															<a><b>Student Inc.</b></a>
+														</div>
+													</div>
+												</div> 
+												<div class="col-6">
+													<div class="row">
+														<div class="col-3">
+															<a><b>Parent Inc.</b></a>		   
+														</div>
+														<div class="col-3">
+															<a><b>Repayment</b></a>
+														</div>
+														<div class="col-3">
+														</div>
+														<div class="col-3">
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="row loanrow">
+												<div class="col-6">
+													<div class="row">
+														<div class="col-3">
+															<a><span class="value"></span></a>
+														</div>
+														<div class="col-3">
+															<a><i class="fas fa-euro-sign"></i> <span class="value"></span> / Month</a>
+														</div>
+														<div class="col-3">
+															<a><span class="value"></span> Years</a>
+														</div>
+														<div class="col-3">
+															<a>Max: <span class="value"></span></a>
+														</div>
+													</div>
+												</div> 
+												<div class="col-6">
+													<div class="row">
+														<div class="col-3">
+															<a>Max: <span class="value"></span></a>		   
+														</div>
+														<div class="col-3">
+															<a><span class="value"></span></a>
+														</div>
+														<div class="col-3 configurecol">
+															<div class="col-6 toggleloan">
+																<input type="checkbox" data-toggle="toggle" data-on="On" data-off="Off" data-onstyle="success" data-offstyle="light">
+															</div>
+														</div>
+														<div class="col-3 configurecol">
+															<button class="btn btn-light deleteloan">
+																<i class="fas fa-trash"></i> Delete
+															</button>
+														</div>
+													</div>
+												</div>
+											</div>
+											<button type="button" id="addloanbutton" class="btn btn-light insertbefore" data-toggle="modal" data-target="#addloanmodal">
+												<i class="fas fa-plus-circle"></i> Add Loan
+											</button>
+											<div class="modal fade" id="addloanmodal" tabindex="-1" role="dialog">
+												<div class="modal-dialog" role="document">
+													<div class="modal-content">
+														<div class="modal-header">
+															<a class="modal-title"><b>New Loan</b></a>
+															<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+															<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body">
+															<a><b>Specifications:</b></a>
+															<input type="text" class="form-control" placeholder="Name">
+															<input type="text" class="form-control" placeholder="Max Amount (&euro;/Month)">
+															<input type="text" class="form-control" placeholder="Max Duration (Years)">
+															<a><b>Requirements:</b></a>
+															<input type="text" class="form-control" placeholder="Max Income (&euro;/Month)">
+															<input type="text" class="form-control" placeholder="Max Income Parents (&euro;/Month)">
+															<a><b>Repayment:</b></a>
+															<div class="row">
+																<div class="dropdown">
+																	<button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+																		<a id="selectedrepayment">Select Repayment</a>
+																	</button>
+																	<div class="dropdown-menu" id="repaymentdropdown" aria-labelledby="dropdownMenuButton">
+																		<a class="dropdown-item repaymentitem"></a>
+																	</div>
+																</div>
+																<a class="createrepayment">Create a repayment regulation first.</a>
+															</div>
+														</div>
+														<div class="modal-footer">
+															<button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+															<button type="button" class="btn btn-success" id="addloan" data-dismiss="modal" disabled>Create</button>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row financierrows">
+											<div class="row interfacetitle">
+												REPAYMENT MANAGEMENT
+											</div>
+											<div class="row repaymentrow">
+												<div class="col-6">
+													<div class="row">
+														<div class="col-3">
+															<a><b>Name</b></a>
+														</div>
+														<div class="col-3">
+															<a><b>Duration</b></a>
+														</div>
+														<div class="col-3">
+															<a><b>Income</b></a>
+														</div>
+													</div>
+												</div> 
+												<div class="col-6">
+												</div>
+											</div>
+											<div class="row repaymentrow">
+												<div class="col-6">
+													<div class="row">
+														<div class="col-3">
+															<a><span class="value"></span></a>
+														</div>
+														<div class="col-3">
+															<a><span class="value"></span> Years</a>
+														</div>
+														<div class="col-3">
+															<a><span class="value"></span> &#37;</a>
+														</div>
+													</div>
+												</div> 
+												<div class="col-6">
+													<div class="col-9">
+													</div>
+													<div class="col-3">
+														<button class="btn btn-light deleterepayment">
+															<i class="fas fa-trash"></i> Delete
+														</button>
+													</div>
+												</div>
+											</div>	
+											<button type="button" class="btn btn-light insertbefore" data-toggle="modal" data-target="#addrepaymentmodal">
+												<i class="fas fa-plus-circle"></i> Add Repayment
+											</button>
+											<div class="modal fade" id="addrepaymentmodal" tabindex="-1" role="dialog">
+												<div class="modal-dialog" role="document">
+													<div class="modal-content">
+														<div class="modal-header">
+															<a class="modal-title"><b>New Repayment</b></a>
+															<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body">
+															<a><b>Specifications:</b></a>
+															<input type="text" class="form-control" placeholder="Name">
+															<input type="number" class="form-control" placeholder="Max Duration (Years)">
+															<input type="number" class="form-control" placeholder="Max Share Income (&#37;)">
+														</div>
+														<div class="modal-footer">
+															<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+															<button type="button" class="btn btn-success" id="addrepayment" data-dismiss="modal">Create</button>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row financierrows">
+											<div class="row interfacetitle">
+												INTEREST MANAGEMENT
+											</div>
+											<div class="row interestrow">
+												<div class="col-6">
+														<div class="row">
+															<div class="col-2">
+																<a>Year:</a>
+															</div>
+															<div class="col-3">
+																<div class="dropdown">
+																	<button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown">
+																		<a id="selectedyear">Select Year</a>
+																	</button>
+																	<div class="dropdown-menu" id="yeardropdown" aria-labelledby="dropdownMenuButton">
+																		<a class="dropdown-item yearitem"></a>
+																	</div>
+																</div>
+															</div>
+															<div class="col-1">
+															</div>
+															<div class="col-3">
+																<a>Interest:</a>
+															</div>
+															<div class="col-3" id="interestnow">
+																<a><span id="showinterest"></span> %</a>
+															</div>
+														</div>
+													</div> 
+												<div class="col-6">
+													<div class="col-6">
+													</div>
+													<div class="col-3">
+														<input type="number" class="form-control" placeholder="%" id="enterinterest">
+													</div>
+													<div class="col-3">
+														<button type="button" class="btn btn-light" id="editinterest"><i class="fas fa-check-circle"></i> Update</button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row studentrows">
+											<div class="row interfacetitle">
+												PRIVATE INFORMATION
+											</div>
+											<div class="col-2">
+												<a><b>Studying:<br>
+												Income:<br>
+												Income Parents:<br></b></a>
+											</div>
+											<div class="col-10">
+												<a><i class="fas fa-circle" id="showstudying"></i><br>
+												<i class="fas fa-euro-sign"></i> <span id="showincome">-</span>,- / Month<br>
+												<i class="fas fa-euro-sign"></i> <span id="showincomeparents">-</span>,- / Month<br>
+											</div>
+											<button type="button" class="btn btn-light" data-toggle="modal" data-target="#editinfomodal">
+												<i class="fas fa-cog"></i> Edit Information
+											</button>
+											<div class="modal fade" id="editinfomodal" tabindex="-1" role="dialog">
+												<div class="modal-dialog" role="document">
+													<div class="modal-content">
+														<div class="modal-header">
+															<a class="modal-title"><b>Edit Information</b></a>
+															<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body">
+															<a><b>Warning:</b><br>
+															In reality, verified user information would be collected using blockained identity management tools
+															such as the "me" application of Foundation Forus. For the sake of this proof of concept you are 
+															allowed to enter unverified information yourself.<br>
+															<b>Private Information:</b><br></a>
+															<input type="checkbox" checked data-toggle="toggle" data-on="Studying" data-off="Not Studying" data-onstyle="success" data-offstyle="light" id="studytoggle">
+															<input type="number" class="form-control" placeholder="Income (&euro;/Month)">
+															<input type="number" class="form-control" placeholder="Income Parents (&euro;/Month)">
+														</div>
+														<div class="modal-footer">
+															<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+															<button type="button" class="btn btn-success" id="editinformation" data-dismiss="modal">Update</button>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row studentrows">
+											<div class="row interfacetitle">
+												LOAN MANAGEMENT
+											</div>
+											<div class="row loanrowstudent">
+												<div class="col">
+													<a><b>Name</b></a>
+												</div>
+												<div class="col">
+													<a><b>Expiry Date</b></a>
+												</div>
+												<div class="col">
+													<a><b>Credit Left</b></a>
+												</div>
+												<div class="col">
+												</div>
+												<div class="col">
+												</div>						
+											</div>
+											<div class="row loanrowstudent">
+												<div class="col">
+													<a><span class="value"></span></a>
+												</div>
+												<div class="col">
+													<a><span class="value"></span> / <span class="value"></span> / <span class="value"></span></a>
+												</div>
+												<div class="col">
+													<a><i class="fas fa-euro-sign"></i> <span class="value"></span> / <span class="value"></span></a>
+												</div>
+												<div class="col">
+													<input type="text" class="form-control" placeholder="Amount (&euro;)">
+												</div>
+												<div class="col">
+													<button type="button" class="btn btn-success loannowbutton">
+														<a><i class="fas fa-check"></i> Loan</a>
+													</button>
+												</div>
+											</div>
+											<button type="button" class="btn btn-light acceptloanbutton" data-toggle="modal" data-target="#acceptloanmodal">
+												<i class="fas fa-plus-circle"></i> Add Loan
+											</button>
+											<div class="modal fade" id="acceptloanmodal" tabindex="-1" role="dialog">
+												<div class="modal-dialog" role="document">
+													<div class="modal-content">
+														<div class="modal-header">
+															<a class="modal-title"><b>Add Loan</b></a>
+															<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body" id="noloansavailable">
+															<a>Unfortunately, there are currently no new loans for which you are eligible.</a>
+														</div>
+														<div class="modal-body" id="loansavailable">
+															<div class="row acceptloanrow">
+																<div class="col">
+																	<a><b>Name</b></a>
+																</div>
+																<div class="col">
+																	<a><b>Amount</b></a>
+																</div>
+																<div class="col">
+																	<a><b>Duration</b></a>
+																</div>
+																<div class="col">
+																	<a><b>Repayment</b></a>
+																</div>
+																<div class="col"></div>
+															</div>
+															<div class ="row acceptloanrow">
+																<div class="col">
+																	<a><span class="value"></span></a>
+																</div>
+																<div class="col">
+																	<a><i class="fas fa-euro-sign"></i> <span class="value"></span> / Month</a>
+																</div>
+																<div class="col">
+																	<a><span class="value"></span> Years</a>
+																</div>
+																<div class="col">
+																	<a><span class="value"></span> Year (<span class="value"></span> %)</a>
+																</div>
+																<div class="col">
+																	<button class="btn btn-success acceptthisloan" data-dismiss="modal">
+																		<i class="fas fa-check-circle"></i> Accept
+																	</button>
+																</div>
+															</div>
+															<div class="insertbefore">
+															</div>
+														</div>
+														<div class="modal-footer">
+															<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row studentrows">
+											<div class="row interfacetitle">
+												DEBT REPAYMENT
+											</div>
+											<div class="row debtrow">
+												<div class="col">
+													<a>Debt:<br>
+													Paid this Month:<br>
+													Details:
+													</b></a>
+												</div>
+												<div class="col">
+													<a><i class="fas fa-euro-sign"></i> <span id="showdebt">30000</span>,- <br>
+													<i class="fas fa-euro-sign"></i> <span id="showtopay"></span> / <span id="showtotaltopay"></span><br>
+													<span id="showrepayyears">12</span> Years (<span id="showrepaypercentage">4</span> %)
+													</a>
+												</div>
+												<div class="col"></div>
+												<div class="col repaycol">
+													<input type="number" class="form-control" placeholder="Amount" id="repayamount">
+												</div>
+												<div class="col">
+													<button class="btn btn-success" id="repayamountbutton">
+														<a><i class="fas fa-check"></i> Repay</a>
+													</button> 
+												</div>
+											</div>											
+										</div>
+										<div class="row contractrows">
+											<div class="row interfacetitle">
+												BALANCE MANAGEMENT
+											</div>
+											<div class="row">
+												<div class="col-4">
+													<a><b>Deposit</b><br><span class="details">to Contract</span></a>
+												</div>
+												<div class="col-4">
+													<input type="number" class="form-control" placeholder="Amount" id="depositamount">
+												</div>
+												<div class="col-4">
+													<button class="btn btn-success" id="deposit">
+														<a><i class="fas fa-check"></i> Accept</a>
+													</button> 
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-4">
+													<a><b>Whitdraw</b><br><span class="details">from Contract</span></a>
+												</div>
+												<div class="col-4">
+													<input type="number" class="form-control" placeholder="Amount" id="withdrawamount">
+												</div>
+												<div class="col-4">
+													<button class="btn btn-success" id="withdraw">
+														<a><i class="fas fa-check"></i> Accept</a>
+													</button> 
+												</div>
+											</div>
+											<div class="row interfacetitle">
+												OTHER OPTIONS
+											</div>
+											<button type="button" class="btn btn-light" data-toggle="modal" data-target="#killcontractmodal">
+												<i class="fas fa-crosshairs"></i> End Contract
+											</button>
+											<div class="modal fade" id="killcontractmodal" tabindex="-1" role="dialog">
+												<div class="modal-dialog" role="document">
+													<div class="modal-content">
+														<div class="modal-header">
+															<a class="modal-title"><b>End Contract</b></a>
+															<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body">
+															<a><b>Warning:</b><br>
+															By ending the contract, the decentralized application will become disfunctional. Ending the contract is only possible if the following
+															conditions are met:<br><br>
+															<i class="fas fa-chevron-right"></i> No student are subscribed for a loan anymore.<br>
+															<i class="fas fa-chevron-right"></i> No more student have a debt.<br><br>
+															The money stored in the contract will be transfered back to the financier. Ending the contract is irreversible. 
+															</a>																
+														</div>
+														<div class="modal-footer">
+															<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+															<button type="button" class="btn btn-danger killcontract" data-dismiss="modal"><i class="fas fa-crosshairs"></i> End Contract</button>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-2 extra">
+										<div class="row">
+										</div>
+										<div class="row">
+											<div class="col-4">
+												<img src="img/contract.png" class="account">
+											</div>
+											<div class="col-8">
+												<a class="account"><b>Contract</b><br>
+												<i class="fas fa-euro-sign"></i> <span class="showbalance"></span>,-</a>
+											</div>
+										</div>
+										<div class="row">
+												<div class="col-4">
+													<img src="img/date.png">
+												</div>
+												<div class="col-8">
+													<a><b>Date</b><br>
+													<span id="showdatenow">1 <b>/</b> 5 <b>/</b> 2018</span></a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>	
+						</div>
+					</li>
+				</ul>
+			</div>
+		</section>
+		<section class="ten">
+			<div class="fullpage textcenter navdots">
+				<i class="fas fa-circle dot hand" onclick="move('0%')"></i><i class="fas fa-circle dot hand" onclick="move('-100%')"></i><i class="fas fa-circle dot hand" onclick="move('-200%')"></i><i class="fas fa-circle dot hand" onclick="move('-300%')"></i><i class="fas fa-circle dot hand" onclick="move('-400%')"></i>
+			</div>
+		</section>
+		<script>
+			if(window.getComputedStyle(document.getElementById('proofofconcept')).getPropertyValue('display') == 'inline')
+			{
+				alert("Unzip the Proof-Of-Concept.zip file, before opening the index.html. Otherwise it will not function correctly.");
+			}
+		</script>
+	</body>
+</html>
